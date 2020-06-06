@@ -1,13 +1,13 @@
 {
-  "name": "remfs-ro-server",
-  "version": "1.0.0",
+  "name": "gemdrive-ro-server",
+  "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "remfs-ro-server": "./index.js"
+    "gemdrive-ro-server": "./index.js"
   },
   "author": "",
   "license": "ISC"
