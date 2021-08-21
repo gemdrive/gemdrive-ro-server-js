@@ -24,9 +24,10 @@ http.createServer(async function(req, res) {
   const fsRoot = '.';
   const reqPath = req.url;
 
-  if (reqPath.endsWith('remfs.json')) {
+  if (reqPath.startsWith('/gemdrive/index') && reqPath.endsWith('list.json')) {
 
-    const fsDir = path.join(fsRoot, path.dirname(reqPath));
+    const itemPath = reqPath.slice('/gemdrive/index'.length, reqPath.length - 'list.json'.length);
+    const fsDir = path.join(fsRoot, path.dirname(itemPath));
 
     let filenames;
     try {
@@ -39,8 +40,7 @@ http.createServer(async function(req, res) {
       return;
     }
 
-    const remfs = {
-      type: 'dir',
+    const gemData = {
       children: {},
     };
 
@@ -49,13 +49,15 @@ http.createServer(async function(req, res) {
 
       const stats = await fs.promises.stat(childFsPath);
 
-      remfs.children[filename] = {
-        type: stats.isDirectory() ? 'dir' : 'file',
+      const name = stats.isDirectory() ? filename + '/' : filename;
+
+      gemData.children[name] = {
         size: stats.size,
+        modTime: stats.mtime,
       };
     }
 
-    res.write(JSON.stringify(remfs, null, 2));
+    res.write(JSON.stringify(gemData, null, 2));
     res.end();
   }
   else {
